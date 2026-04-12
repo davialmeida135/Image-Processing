@@ -38,15 +38,32 @@ The visual comparison of the obtained results is presented below.
   columns: (1fr, 1fr, 1fr),
   gutter: 10pt,
   align(center)[
-    #image("original.png", width: 100%)
+    #image("original_bear.png", width: 100%)
     Original Image
   ],
   align(center)[
-    #image("resultado_low_pass.png", width: 100%)
+    #image("resultado_low_pass_bear.png", width: 100%)
     Low-Pass Filter (Mean)
   ],
   align(center)[
-    #image("resultado_high_pass.png", width: 100%)
+    #image("resultado_high_pass_bear.png", width: 100%)
+    High-Pass Filter (Laplacian)
+  ]
+)
+
+#grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 10pt,
+  align(center)[
+    #image("original_hill.png", width: 100%)
+    Original Image
+  ],
+  align(center)[
+    #image("resultado_low_pass_hill.png", width: 100%)
+    Low-Pass Filter (Mean)
+  ],
+  align(center)[
+    #image("resultado_high_pass_hill.png", width: 100%)
     High-Pass Filter (Laplacian)
   ]
 )
