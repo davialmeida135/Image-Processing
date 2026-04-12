@@ -1,0 +1,56 @@
+#set page(paper: "a4", margin: 2.5cm)
+#set text(size: 11pt, lang: "en")
+
+// Title and author configuration
+#align(center)[
+  #text(size: 16pt, weight: "bold")[Question 2: Spatial Convolution Implementation]
+]
+
+#v(1.5em)
+
+= Introduction
+
+This report describes the implementation of digital image processing algorithms in the spatial domain, developed entirely from scratch in C, without relying on external computer vision libraries. The image format chosen for testing was PGM (_Portable Gray Map_).
+
+= Implementation Methodology
+
+Reading and writing PGM images were handled by directly parsing the files at both byte and text levels (depending on the file's _magic number_). To optimize CPU cache memory access, image pixels were allocated sequentially in a single one-dimensional array. A mathematical flattening formula (`index = y * width + x`) was utilized to simulate 2D matrix coordinate access.
+
+== Convolution Algorithm
+
+The spatial convolution was implemented by encapsulating the new pixel calculation within a modular function. To prevent segmentation faults and memory boundary violations—which occur when the neighborhood window extends beyond the image limits—we strictly followed the geometric restriction outlined in the project specification.
+
+Let $d$ be the size of the square _kernel_ (which must have odd dimensions). The algorithm explicitly ignores the first and last $k = floor(d/2)$ rows and columns. Two nested `for` loops define this valid "safe zone" for processing. The ignored boundary pixels are left completely unprocessed, retaining their initial zero (black) values provided by the `calloc()` memory allocation.
+
+= Results: Low-Pass and High-Pass Filters
+
+The algorithms were tested on the sample image provided in the virtual classroom. Two distinct convolution filters were applied using $3 times 3$ kernels:
+
+1.  *Low-Pass Filter (Mean Filter):* This _kernel_ assigns a weight of $1$ to all positions, requiring a normalization factor of $9$. The theoretical expectation is a smoothed (blurred) image, which effectively reduces high-frequency noise at the cost of edge sharpness.
+2.  *High-Pass Filter (Laplacian):* This _kernel_ is designed to highlight abrupt intensity transitions. The expected result is a predominantly dark image where only the edges and contours of the original objects are illuminated. In this specific implementation, negative convolution results were clamped to zero (black).
+
+The visual comparison of the obtained results is presented below.
+
+#v(1em)
+
+// Grid block to display images side-by-side
+#grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 10pt,
+  align(center)[
+    #image("original.png", width: 100%)
+    Original Image
+  ],
+  align(center)[
+    #image("resultado_low_pass.png", width: 100%)
+    Low-Pass Filter (Mean)
+  ],
+  align(center)[
+    #image("resultado_high_pass.png", width: 100%)
+    High-Pass Filter (Laplacian)
+  ]
+)
+
+= Conclusion
+
+The implementation successfully applied convolution masks in the spatial domain. Isolating the mathematical logic into a dedicated header file (`convolutions.h`) allowed the main application to dynamically switch filters by merely swapping the _kernel_ matrix and its normalization factor, demonstrating a clean and robust software architecture.
