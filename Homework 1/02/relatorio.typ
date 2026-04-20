@@ -1,12 +1,9 @@
-#set page(paper: "a4", margin: 2.5cm)
-#set text(size: 11pt, lang: "en")
-
-// Title and author configuration
 #align(center)[
   #text(size: 16pt, weight: "bold")[Question 2: Spatial Convolution Implementation]
 ]
 
 #v(1.5em)
+#counter(heading).update(0)
 
 = Introduction
 
@@ -26,8 +23,8 @@ Let $d$ be the size of the square _kernel_ (which must have odd dimensions). The
 
 The algorithms were tested on the sample image provided in the virtual classroom. Two distinct convolution filters were applied using $3 times 3$ kernels:
 
-1.  *Low-Pass Filter (Mean Filter):* This _kernel_ assigns a weight of $1$ to all positions, requiring a normalization factor of $9$. The theoretical expectation is a smoothed (blurred) image, which effectively reduces high-frequency noise at the cost of edge sharpness.
-2.  *High-Pass Filter (Laplacian):* This _kernel_ is designed to highlight abrupt intensity transitions. The expected result is a predominantly dark image where only the edges and contours of the original objects are illuminated. In this specific implementation, negative convolution results were clamped to zero (black).
+1. *Low-Pass Filter (Mean Filter):* This _kernel_ assigns a weight of $1$ to all positions, requiring a normalization factor of $9$. The theoretical expectation is a smoothed (blurred) image, which effectively reduces high-frequency noise at the cost of edge sharpness.
+2. *High-Pass Filter (Laplacian):* This _kernel_ is designed to highlight abrupt intensity transitions. The expected result is a predominantly dark image where only the edges and contours of the original objects are illuminated. In this specific implementation, negative convolution results were clamped to zero (black).
 
 The visual comparison of the obtained results is presented below.
 
@@ -48,7 +45,7 @@ The visual comparison of the obtained results is presented below.
   align(center)[
     #image("resultado_high_pass_bear.png", width: 100%)
     High-Pass Filter (Laplacian)
-  ]
+  ],
 )
 
 #grid(
@@ -65,9 +62,9 @@ The visual comparison of the obtained results is presented below.
   align(center)[
     #image("resultado_high_pass_hill.png", width: 100%)
     High-Pass Filter (Laplacian)
-  ]
+  ],
 )
 
 = Conclusion
 
-The implementation successfully applied convolution masks in the spatial domain. Isolating the mathematical logic into a dedicated header file (`convolutions.h`) allowed the main application to dynamically switch filters by merely swapping the _kernel_ matrix and its normalization factor, demonstrating a clean and robust software architecture.
+The implementation successfully applied convolution masks in the spatial domain. But after applying the High-Pass Filter on images with salt and pepper noise it became clear that the Laplacian filter is highly sensitive to high and low values across the image.
