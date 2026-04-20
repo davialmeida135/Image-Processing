@@ -19,6 +19,40 @@ The spatial convolution was implemented by encapsulating the new pixel calculati
 
 Let $d$ be the size of the square _kernel_ (which must have odd dimensions). The algorithm explicitly ignores the first and last $k = floor(d/2)$ rows and columns. Two nested `for` loops define this valid "safe zone" for processing. The ignored boundary pixels are left completely unprocessed, retaining their initial zero (black) values provided by the `calloc()` memory allocation.
 
+```c
+unsigned char aplicar_convolucao_pixel(Image img, int x, int y, int kernel_size, int *kernel, int soma_pesos_kernel)
+{
+    int k = kernel_size / 2;
+    int soma_convolucao = 0;
+
+    for (int i = -k; i <= k; i++)
+    {
+        for (int j = -k; j <= k; j++)
+        {
+            int img_y = y + i;
+            int img_x = x + j;
+            int indice_img = img_y * img.width + img_x;
+
+            int kern_y = i + k;
+            int kern_x = j + k;
+            int indice_kernel = kern_y * kernel_size + kern_x;
+
+            soma_convolucao += img.pixels[indice_img] * kernel[indice_kernel];
+        }
+    }
+
+    int valor_final = soma_convolucao / soma_pesos_kernel;
+
+    // Clamping: garante que o valor fique entre 0 e 255
+    if (valor_final > 255)
+        valor_final = 255;
+    if (valor_final < 0)
+        valor_final = 0;
+
+    return (unsigned char)valor_final;
+}
+```
+
 = Results: Low-Pass and High-Pass Filters
 
 The algorithms were tested on the sample image provided in the virtual classroom. Two distinct convolution filters were applied using $3 times 3$ kernels:
