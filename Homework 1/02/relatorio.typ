@@ -24,7 +24,6 @@ unsigned char aplicar_convolucao_pixel(Image img, int x, int y, int kernel_size,
 {
     int k = kernel_size / 2;
     int soma_convolucao = 0;
-
     for (int i = -k; i <= k; i++)
     {
         for (int j = -k; j <= k; j++)
@@ -32,23 +31,18 @@ unsigned char aplicar_convolucao_pixel(Image img, int x, int y, int kernel_size,
             int img_y = y + i;
             int img_x = x + j;
             int indice_img = img_y * img.width + img_x;
-
             int kern_y = i + k;
             int kern_x = j + k;
             int indice_kernel = kern_y * kernel_size + kern_x;
-
             soma_convolucao += img.pixels[indice_img] * kernel[indice_kernel];
         }
     }
-
     int valor_final = soma_convolucao / soma_pesos_kernel;
-
     // Clamping: garante que o valor fique entre 0 e 255
     if (valor_final > 255)
         valor_final = 255;
     if (valor_final < 0)
         valor_final = 0;
-
     return (unsigned char)valor_final;
 }
 ```
@@ -68,32 +62,25 @@ The visual comparison of the obtained results is presented below.
 #grid(
   columns: (1fr, 1fr, 1fr),
   gutter: 10pt,
-  align(center)[
+  align: center,
+  [
     #image("original_bear.png", width: 100%)
-    Original Image
   ],
-  align(center)[
+  [
     #image("resultado_low_pass_bear.png", width: 100%)
-    Low-Pass Filter (Mean)
   ],
-  align(center)[
+  [
     #image("resultado_high_pass_bear.png", width: 100%)
-    High-Pass Filter (Laplacian)
   ],
-)
-
-#grid(
-  columns: (1fr, 1fr, 1fr),
-  gutter: 10pt,
-  align(center)[
+  [
     #image("original_hill.png", width: 100%)
     Original Image
   ],
-  align(center)[
+  [
     #image("resultado_low_pass_hill.png", width: 100%)
     Low-Pass Filter (Mean)
   ],
-  align(center)[
+  [
     #image("resultado_high_pass_hill.png", width: 100%)
     High-Pass Filter (Laplacian)
   ],
@@ -101,4 +88,4 @@ The visual comparison of the obtained results is presented below.
 
 = Conclusion
 
-The implementation successfully applied convolution masks in the spatial domain. But after applying the High-Pass Filter on images with salt and pepper noise it became clear that the Laplacian filter is highly sensitive to high and low values across the image.
+The implementation successfully applied convolution masks in the spatial domain, covering both High-Pass and Low-Pass filters. The Low-Pass filter proved effective at smoothing images by averaging neighboring pixel values, reducing noise at the cost of some detail. The High-Pass filter, on the other hand, enhanced edges and fine details by means of the Laplacian mask. However, a key limitation observed was its high sensitivity to salt and pepper noise, since the filter amplifies extreme pixel values across the image, which can degrade the output significantly. This highlights the importance of pre-processing steps, such as noise removal, before applying High-Pass filters in practice.
