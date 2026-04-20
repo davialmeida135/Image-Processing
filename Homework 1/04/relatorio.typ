@@ -16,7 +16,7 @@ The image parsing and memory allocation procedures remained consistent with the 
 
 == Median Filter Algorithm
 
-Unlike spatial convolution, which applies a linear mathematical combination of neighborhood pixels using a weighted mask, the median filter is an order-statistic (non-linear) filter. For a given pixel, a $3 times 3$ sliding window extracts the intensities of the 9 neighboring pixels into a temporary array.
+Unlike spatial convolution, which applies a linear mathematical combination of neighborhood pixels using a weighted mask, the median filter is an order-statistic (non-linear) filter. For a given pixel, a $5 times 5$ sliding window extracts the intensities of the 25 neighboring pixels into a temporary array.
 
 To determine the median, this temporary array is sorted in ascending order utilizing the C standard library's `qsort` algorithm. The median value—located exactly at the center of the sorted array (index 4 for a 9-element array)—is then assigned to the corresponding central pixel in the output image. As with the convolution operations, the algorithm strictly respects the image boundaries, ignoring a safe margin of $k = floor(d/2)$ pixels to prevent segmentation faults.
 
@@ -26,29 +26,25 @@ The algorithm was tested on images artificially corrupted with salt-and-pepper n
 
 Because the median filter relies on spatial sorting, these extreme outliers are naturally pushed to the extremities of the sorted array. This mechanism guarantees that a healthy, representative median intensity replaces the corrupted pixel. The results demonstrate that the filter successfully eliminates the impulse noise while preserving the sharpness of the edges significantly better than a standard low-pass (mean) filter would.
 
-#v(1em)
+#pagebreak()
 
 #grid(
   columns: (1fr, 1fr),
-  gutter: 20pt,
-  align(center)[
-    #image("original_bear.png", width: 100%)
+  gutter: 10pt,
+  column-gutter: 5pt,
+  align: center,
+  [
+    #image("original_bear.png", width: 90%)
+  ],
+  [
+    #image("resultado_mediana_bear.png", width: 90%)
+  ],
+  [
+    #image("original_boat.png", width: 90%)
     Original Image (Salt & Pepper Noise)
   ],
-  align(center)[
-    #image("resultado_mediana_bear.png", width: 100%)
-    Median Filter Result ($5 times 5$)
-  ]
-)
-#grid(
-  columns: (1fr, 1fr),
-  gutter: 20pt,
-  align(center)[
-    #image("original_boat.png", width: 100%)
-    Original Image (Salt & Pepper Noise)
-  ],
-  align(center)[
-    #image("resultado_mediana_boat.png", width: 100%)
+  [
+    #image("resultado_mediana_boat.png", width: 90%)
     Median Filter Result ($5 times 5$)
   ]
 )
